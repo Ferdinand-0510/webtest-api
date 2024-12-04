@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: flask-api
+    env: python
+    region: us-central  # 根據你的需求選擇區域
+    buildCommand: |
+      sudo apt-get update
+      sudo apt-get install -y unixodbc-dev gcc python3-dev
+      pip install --upgrade pip
+      pip install -r requirements.txt
+    startCommand: python app.py  # 替換為你的啟動命令
+    plan: free  # 可選擇 free 或其他付費方案
