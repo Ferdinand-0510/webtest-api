@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: webtest-api
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn -c gunicorn_config.py app:app"
