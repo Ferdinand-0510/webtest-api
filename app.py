@@ -29,18 +29,18 @@ from datetime import datetime
 from werkzeug.utils import secure_filename
 from pathlib import Path  # 添加這行
 from dotenv import load_dotenv
-from webdriver_manager.chrome import ChromeDriverManager
 # 載入環境變數
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY', 'your-secret-key')
+app.secret_key = os.getenv('SECRET_KEY', '0877283719e292c601be9bdf87b99a21ca96d301d4be57c7480b92506566d53b')
 
 # 配置 CORS
 CORS(app, supports_credentials=True, resources={
     r"/*": {
         "origins": [
             "https://ferdinand-0510.github.io/",  # 您的前端網域
+            "https://webtest-api.onrender.com",
             "http://localhost:3000"  # 本地開發用
         ],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
