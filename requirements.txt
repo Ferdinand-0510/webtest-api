@@ -13,3 +13,6 @@ MarkupSafe==2.0.1
 six==1.16.0
 pyodbc
 pandas
+selenium
+bs4
+requests
