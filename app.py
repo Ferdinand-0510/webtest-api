@@ -1,9 +1,7 @@
 # app.py
 import time
-
 from flask import Flask, jsonify, send_from_directory,session
 import secrets
-import pyodbc
 from flask_cors import CORS
 from flask import request
 import pandas as pd
@@ -28,6 +26,7 @@ import asyncio
 from datetime import datetime
 from werkzeug.utils import secure_filename
 from pathlib import Path  # 添加這行
+from database import create_connection  # 添加這行來導入 create_connection
 from dotenv import load_dotenv
 # 載入環境變數
 load_dotenv()
@@ -49,20 +48,25 @@ CORS(app, supports_credentials=True, resources={
     }
 })
 
-#這個客戶叫做"測試"
-This_customer='測試'
+# 這個客戶叫做"測試"
+This_customer = '測試'
+
 def get_This_Key():
     try:
         with create_connection() as conn_sql_server:
             with conn_sql_server.cursor() as cursor:
-                cursor.execute("SELECT Uuid FROM WebLoginKey WHERE Name = ?",(This_customer,))
+                cursor.execute("SELECT Uuid FROM WebLoginKey WHERE Name = ?", (This_customer,))
                 row = cursor.fetchone()
                 if row:
                     return row[0]
+                return None  # 如果沒有找到記錄
     except Exception as e:
-        return print(error=str(e))
+        print(f"Error getting key: {str(e)}")  # 正確的錯誤處理
+        return None
+
 This_key = get_This_Key()
-print("This_key:",This_key)
+if This_key is None:
+    print("Warning: Could not get This_key")
 
 
 # 註冊接口

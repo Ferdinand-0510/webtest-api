@@ -1,32 +1,40 @@
 import os
-import pyodbc
+import pymssql
 from dotenv import load_dotenv
 
 load_dotenv()
+
 
 def create_connection():
     """
     創建與 Azure SQL Database 的連接
     """
     try:
-        # 從環境變數獲取連接字串
-        connection_string = os.getenv('DATABASE_URL', (
-            "Driver={ODBC Driver 17 for SQL Server};"
-            "Server=tcp:carlweb-server.database.windows.net,1433;"
-            "Database=CarlWeb;"
-            "Uid=carl;"
-            "Pwd=Golden3857.;"  # 請替換為您的實際密碼
-            "Encrypt=yes;"
-            "TrustServerCertificate=no;"
-            "Connection Timeout=30;"
-        ))
-        
-        # 建立連接
-        conn = pyodbc.connect(connection_string)
+        # Azure SQL Database 連接參數
+        server = "carlweb-server.database.windows.net"
+        database = "CarlWeb"
+        username = "carl"
+        password = os.getenv('DB_PASSWORD')  # 從環境變數獲取密碼
+
+        # 使用 pymssql 建立連接
+        conn = pymssql.connect(
+            server=server,
+            user=username,
+            password=password,
+            database=database,
+            port='1433',
+            as_dict=True,  # 返回字典格式的結果
+            charset='utf8'  # 設置字符編碼
+        )
+
+        print(f"成功連接到資料庫: {database}")  # 調試用
         return conn
-    except pyodbc.Error as e:
+
+    except Exception as e:
         print(f"資料庫連接錯誤: {str(e)}")
+        print(f"連接詳情: server={server}, user={username}, database={database}")  # 調試用
         raise
+
 
 def test_connection():
     """
@@ -44,6 +52,6 @@ def test_connection():
         print(f"連接測試失敗: {str(e)}")
         return False
 
-# 如果直接運行此文件，則執行測試
+
 if __name__ == "__main__":
     test_connection()
