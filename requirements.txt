@@ -16,3 +16,4 @@ pandas
 selenium
 bs4
 requests
+pymssql
